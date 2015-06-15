@@ -36,16 +36,16 @@ main = do
   putStrLn $ "MSE = " ++ show evaluation
 
 -- Reads in the "SSV" (semi-colon separated) file and turn it into data
-readDataset filename = do 
+readDataset filename = do
   csv <- readCSVFile defCSVSettings { csvSep = ';' } filename
 
   let (names, instances) = parseInstances (toList csv)
   let keys = delete "quality" names
-  let attrs = [ Attr k (! (fromJust . elemIndex k $ names)) | k <- keys ]
-  let target = (! (fromJust . elemIndex "quality" $ names)) 
-  
+  let attrs = [ Attr k ((fromJust . elemIndex k $ names)) | k <- keys ]
+  let target = (! (fromJust . elemIndex "quality" $ names))
+
   return $ DS attrs (makeExamplesWith target instances)
-  
+
 makeExamplesWith :: (Instance -> l) -> [Instance] -> [Example l]
 makeExamplesWith f is = [ Ex i (f i) | i <- is ]
 
